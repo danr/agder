@@ -1,0 +1,26 @@
+name:                Agder
+version:             0.1.0.0
+synopsis:            An online judge for Agda problems
+license:             BSD3
+license-file:        LICENSE
+author:              Dan Rosén
+maintainer:          danr@student.chalmers.se
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable Agder
+  main-is:           Main.hs
+  ghc-options:       -threaded -O2
+  hs-source-dirs:    backend
+  build-depends:
+        base ==4.6.*
+      , transformers
+      , filepath
+      , directory
+      , process
+      , text
+      , aeson
+      , SHA
+      , scotty >= 0.4.6
+      , wai-extra
