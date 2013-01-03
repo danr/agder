@@ -7,20 +7,45 @@ h1
   margin: 0px
   text-align: center
 
+p
+  margin:
+    left: 10px
+    right: 10px
+
+h2
+  font:
+    family: 'Rufina', sans-serif
+    size: 28px
+  color: #4b9
+  margin:
+    left: 10px
+    bottom: 10px
+    top: 10px
+
+  &.problem-title
+    cursor: pointer
+
+a
+  color: #4b9
+
+
 div.nav
   display: table
   margin:
     left: auto
     right: auto
 
-a.nav-link
+textarea
   font:
-    family: 'Rufina', sans-serif
-    size: 28px
-  color: #4b9
-  margin:
-    left: 20px
-    right: 20px
+    family: 'Source Code Pro', monospace
+    size: 12px
+
+textarea.problem-input
+  width: 100%
+  border-width: 4px
+  border-style: double
+  border-color: #292
+  padding: 1px
 
 body
   margin: 0px
@@ -28,17 +53,46 @@ body
   background: url(floral.jpg)
   background-size: 350px auto
 
-body
-  font-family: 'Domine', serif
+body, button, pre.problem-result
+  font:
+    family: 'Domine', serif
+    size: 14px
+
+button
+  border-radius: 6px
+  background: #ac4
+  border: 1px solid #83c41a
+  display: inline-block
+  margin-top: 2px
+  float: right
+  padding: 3px 16px
+  &:hover
+    background-color: #9c3
+  &:active
+    position: relative
+    top: 1px
+
+div.problem
+  margin:
+    left: 20px
+    right: 20px
 
 div.container
+  width: 600px
+  margin-top: 15px
+  margin-bottom: 15px
+
+div.footer
+  width: 250px
+  text-align: center
+  margin-top: 0px
+  margin-bottom: 15px
+
+div.container, div.footer
   background: #fff
-  width: 800px
   min-height: 100%
   padding: 5px
   margin:
-    top: 15px
-    bottom: 5px
     left: auto
     right: auto
 
@@ -49,5 +103,3 @@ div.container
   -moz-border-radius: 10px
   border-radius: 10px
 
-h2.problem
-  font-family: 'Carrois Gothic', sans-serif

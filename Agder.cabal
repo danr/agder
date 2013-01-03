@@ -19,8 +19,10 @@ executable Agder
       , filepath
       , directory
       , process
+      , timeit
       , text
       , aeson
       , SHA
       , scotty >= 0.4.6
       , wai-extra
+      , wai-middleware-static
