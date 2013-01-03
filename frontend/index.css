@@ -1,0 +1,45 @@
+h1 {
+  font-family: "Sacramento", cursive;
+  font-size: 80px;
+  font-weight: normal;
+  color: #ff77bb;
+  margin: 0px;
+  text-align: center; }
+
+div.nav {
+  display: table;
+  margin-left: auto;
+  margin-right: auto; }
+
+a.nav-link {
+  font-family: "Rufina", sans-serif;
+  font-size: 28px;
+  color: #44bb99;
+  margin-left: 20px;
+  margin-right: 20px; }
+
+body {
+  margin: 0px;
+  padding: 0px; }
+
+body {
+  font-family: "Domine", serif; }
+
+div.container {
+  background: white;
+  width: 800px;
+  min-height: 100%;
+  padding: 5px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  border-width: 4px;
+  border-style: double;
+  border-color: #229922;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px; }
+
+h2.problem {
+  font-family: "Carrois Gothic", sans-serif; }
