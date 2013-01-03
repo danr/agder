@@ -20,7 +20,9 @@ a.nav-link {
 
 body {
   margin: 0px;
-  padding: 0px; }
+  padding: 0px;
+  background: url(floral.jpg);
+  background-size: 350px auto; }
 
 body {
   font-family: "Domine", serif; }
