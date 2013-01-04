@@ -1,10 +1,11 @@
+make_url = (s) -> "http://#{window.location.host}" + s
 
 window.ProblemsCtrl = ($scope,$http) ->
     $scope.problems = []
 
     promise = $http
         method: "GET"
-        url: "http://localhost:3000/problems"
+        url: make_url "/problems"
 
     promise.success (res) ->
         $scope.problems = res
@@ -23,7 +24,7 @@ window.ProblemCtrl = ($scope,$http) ->
         if $scope.show and not $scope.problem
             promise = $http
                 method: "GET"
-                url: "http://localhost:3000/problem/#{$id}"
+                url: make_url "/problem/#{$id}"
 
             promise.success (res) ->
                 $scope.problem = res
@@ -40,7 +41,7 @@ window.ProblemCtrl = ($scope,$http) ->
         $scope.result = "Submitted!"
         submit_promise = $http
             method: "POST"
-            url: "http://localhost:3000/solve/#{$id}"
+            url: make_url "/solve/#{$id}"
             data: $scope.problem
 
         submit_promise.success (res) ->
