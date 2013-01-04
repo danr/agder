@@ -21,15 +21,17 @@
     });
   };
 
-  window.ProblemCtrl = function($scope, $http) {
+  window.ProblemCtrl = function($scope, $http, $location) {
     var $id;
     $id = $scope.id;
     $scope.problem = "";
     $scope.solved = false;
-    $scope.show = false;
     $scope.toggleShow = function() {
-      var promise;
       $scope.show = !$scope.show;
+      return $scope.updateShow();
+    };
+    $scope.updateShow = function() {
+      var promise;
       if ($scope.show && !$scope.problem) {
         promise = $http({
           method: "GET",
@@ -43,9 +45,14 @@
         });
       }
     };
-    if ($id === "DeMorgan") {
-      $scope.toggleShow();
-    }
+    $scope.loc = $location;
+    $scope.$watch('loc.search()', function() {
+      $scope.show = $location.search()[$id] != null;
+      return $scope.updateShow();
+    });
+    $scope.$watch('show', function() {
+      return $location.search($id, $scope.show || null);
+    });
     $scope.result = "";
     return $scope.submit = function() {
       var submit_promise;

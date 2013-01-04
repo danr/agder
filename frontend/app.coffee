@@ -13,14 +13,17 @@ window.ProblemsCtrl = ($scope,$http) ->
     promise.error (res) ->
         console.log "Error: ", res
 
-window.ProblemCtrl = ($scope,$http) ->
+window.ProblemCtrl = ($scope,$http,$location) ->
     $id = $scope.id
+
     $scope.problem = ""
     $scope.solved = false
 
-    $scope.show = false
     $scope.toggleShow = () ->
         $scope.show = !$scope.show
+        $scope.updateShow()
+
+    $scope.updateShow = () ->
         if $scope.show and not $scope.problem
             promise = $http
                 method: "GET"
@@ -32,8 +35,18 @@ window.ProblemCtrl = ($scope,$http) ->
             promise.error (res) ->
                 console.log "Error: ", res
 
-    if $id == "DeMorgan"
-        $scope.toggleShow()
+    $scope.loc = $location
+
+    $scope.$watch 'loc.search()', () ->
+        $scope.show = $location.search()[$id]?
+        $scope.updateShow()
+
+    $scope.$watch 'show', () ->
+        $location.search($id, $scope.show or null)
+
+
+    # if $id == "DeMorgan"
+    #     $scope.toggleShow()
 
     $scope.result = ""
 
