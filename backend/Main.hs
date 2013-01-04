@@ -4,7 +4,7 @@ module Main where
 import Control.Monad
 import Control.Monad.IO.Class (liftIO)
 import Data.Text.Lazy.Encoding
-import Network.Wai.Middleware.RequestLogger (logStdoutDev)
+import Network.Wai.Middleware.RequestLogger (logStdout)
 import Network.Wai.Middleware.Static
 import Web.Scotty
 import Data.Monoid
@@ -14,12 +14,13 @@ import Problems
 main :: IO ()
 main = scotty 3000 $ do
 
-    middleware logStdoutDev
-    middleware $ staticPolicy $ mconcat $
-        [ addBase "frontend"
-        , noDots
-        , foldr1 (<|>) (map hasSuffix ["html", "js", "css", "jpg"])
-        ]
+    middleware logStdout
+    middleware $ staticPolicy $
+        mconcat [ addBase "frontend"
+                , noDots
+                , foldr1 (<|>) (map hasSuffix ["html", "js", "css", "jpg"])
+                ]
+        <|> only (zip ["","/"] (repeat "frontend/index.html"))
 
     get "/problems" $ json =<< liftIO getProblemList
 
