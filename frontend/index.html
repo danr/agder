@@ -15,21 +15,18 @@
     <div class="container">
       <h1>Agders Projekt</h1>
       <p>Help poor Agder to improve his knowledge about Agda with this online judge!</p>
-      <div class="row">
-        <div class="span12">
-          <div ng-controller="ProblemsCtrl">
-            <div ng-repeat="id in problems">
-              <div class="problem-outer" ng-controller="ProblemCtrl">
-                <h2 class="problem-title" ng-click="toggleShow()">{{ id }}
-                  <span ng-show="solved">&#10003;</span>
-                </h2>
-                <div class="problem" ng-show="show">
-                  <textarea class="problem-input" rows=17 ng-model="problem"></textarea>
-                  <button ng-click="submit()">Submit solution</button>
-                  <pre class="problem-result" ng-show="!solved">{{ result }}</pre>
-                  <p ng-show="solved">Congratulations! You solved {{ id }}!</p>
-                </div>
-              </div>
+      <div ng-controller="ProblemsCtrl">
+        <div ng-repeat="id in problems">
+          <div class="problem-outer" ng-controller="ProblemCtrl">
+            <h2 class="problem-title" ng-click="toggleShow()">{{ id }}
+              <span ng-show="solved">&#10003;</span>
+            </h2>
+            <div class="problem" ng-show="show">
+              <pre class="problem-definitions" ng-show="definitions">{{ definitions }}</pre>
+              <textarea class="problem-input" rows="8" ng-model="problem"></textarea>
+              <button ng-click="submit()">Submit solution</button>
+              <pre class="problem-result" ng-show="!solved">{{ result }}</pre>
+              <p ng-show="solved">Congratulations! You solved {{ id }}!</p>
             </div>
           </div>
         </div>

@@ -28,7 +28,7 @@ main = scotty 3000 $ do
         ok <- liftIO (doesProblemExist problem)
         unless ok next
         header "Content-type" "text/plain; charset=utf-8"
-        text =<< liftIO (getProblem problem)
+        json =<< liftIO (getProblem problem)
 
     post "/solve/:problem" $ \problem -> do
         ok <- liftIO (doesProblemExist problem)

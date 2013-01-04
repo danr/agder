@@ -17,6 +17,7 @@ window.ProblemCtrl = ($scope,$http,$location) ->
     $id = $scope.id
 
     $scope.problem = ""
+    $scope.definitions = ""
     $scope.solved = false
 
     $scope.toggleShow = () ->
@@ -30,7 +31,8 @@ window.ProblemCtrl = ($scope,$http,$location) ->
                 url: make_url "/problem/#{$id}"
 
             promise.success (res) ->
-                $scope.problem = res
+                $scope.problem = res.problem
+                $scope.definitions = res.definitions or ""
 
             promise.error (res) ->
                 console.log "Error: ", res

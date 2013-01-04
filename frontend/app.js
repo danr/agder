@@ -25,6 +25,7 @@
     var $id;
     $id = $scope.id;
     $scope.problem = "";
+    $scope.definitions = "";
     $scope.solved = false;
     $scope.toggleShow = function() {
       $scope.show = !$scope.show;
@@ -38,7 +39,8 @@
           url: make_url("/problem/" + $id)
         });
         promise.success(function(res) {
-          return $scope.problem = res;
+          $scope.problem = res.problem;
+          return $scope.definitions = res.definitions || "";
         });
         return promise.error(function(res) {
           return console.log("Error: ", res);

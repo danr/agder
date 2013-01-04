@@ -1,6 +1,7 @@
 module Verifier where
 
-open import DeMorgan using (dm ; ¬_ ; _∨_ ; _∧_)
+open import Definitions
+open import DeMorgan using (deMorgan)
 
 check : {A B : Set} → ¬ A ∧ ¬ B → ¬ (A ∨ B)
-check = dm
+check = deMorgan
