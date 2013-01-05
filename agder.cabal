@@ -1,4 +1,4 @@
-name:                Agder
+name:                agder
 version:             0.1.0.0
 synopsis:            An online judge for Agda problems
 license:             BSD3
@@ -9,7 +9,7 @@ category:            Web
 build-type:          Simple
 cabal-version:       >=1.8
 
-executable Agder
+executable agder
   main-is:           Main.hs
   ghc-options:       -threaded -O2
   hs-source-dirs:    backend
