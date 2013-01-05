@@ -26,7 +26,7 @@
     };
   }).controller('ProblemsCtrl', function($scope, $http) {
     $scope.problems = [];
-    return $http.get(make_url("/problems")).success(function(res) {
+    return $http.get(make_url("/problems")).error(console.log).success(function(res) {
       return $scope.problems = res;
     });
   }).controller('ProblemCtrl', function($scope, $http, $location) {
@@ -53,7 +53,7 @@
     };
     $scope.updateShow = function() {
       if ($scope.show && !$scope.problem) {
-        return $http.get(make_url("/problem/" + $id)).success(function(res) {
+        return $http.get(make_url("/problem/" + $id)).error(console.log).success(function(res) {
           $scope.problem = res.problem;
           return $scope.definitions = res.definitions || "";
         });
@@ -61,7 +61,7 @@
     };
     return $scope.submit = function() {
       $scope.result = "Submitted!";
-      return $http.post(make_url("/solve/" + $id), $scope.problem).success(function(res) {
+      return $http.post(make_url("/solve/" + $id), $scope.problem).error(console.log).success(function(res) {
         $scope.result = res.stdout.replace(RegExp("/home/dan/code/agder/solutions/" + $id + "/[^/]*/([^\\.]*).agda", "g"), function(filename, short) {
           return short + ".agda";
         });

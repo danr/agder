@@ -20,8 +20,9 @@ angular.module('agder', [])
     ).controller('ProblemsCtrl', ($scope,$http) ->
         $scope.problems = []
 
-        $http.get(make_url "/problems").success (res) ->
-            $scope.problems = res
+        $http.get(make_url "/problems")
+            .error(console.log)
+            .success (res) -> $scope.problems = res
 
     ).controller('ProblemCtrl', ($scope,$http,$location) ->
         # The identifier of this problem
@@ -53,18 +54,22 @@ angular.module('agder', [])
 
         $scope.updateShow = () ->
             if $scope.show and not $scope.problem
-                $http.get(make_url "/problem/#{$id}").success (res) ->
-                    $scope.problem = res.problem
-                    $scope.definitions = res.definitions or ""
+                $http.get(make_url "/problem/#{$id}")
+                    .error(console.log)
+                    .success (res) ->
+                        $scope.problem = res.problem
+                        $scope.definitions = res.definitions or ""
 
         # Solution attempt
         $scope.submit = () ->
             $scope.result = "Submitted!"
-            $http.post(make_url("/solve/#{$id}"), $scope.problem).success (res) ->
-                $scope.result = res.stdout.replace ////home/dan/code/agder/solutions/#{$id}/[^/]*/([^\.]*).agda///g, (filename, short) ->
-                    short + ".agda"
+            $http.post(make_url("/solve/#{$id}"), $scope.problem)
+                .error(console.log)
+                .success (res) ->
+                    $scope.result = res.stdout.replace ////home/dan/code/agder/solutions/#{$id}/[^/]*/([^\.]*).agda///g, (filename, short) ->
+                        short + ".agda"
 
-                if res.exitcode == 0
-                    $scope.solved = true
+                    if res.exitcode == 0
+                        $scope.solved = true
     )
 
