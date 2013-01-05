@@ -1,7 +1,7 @@
 module Verifier where
 
-open import Definitons
-open import NatEquality (_≟_ ; equality-disjoint)
+open import Definitions
+open import NatEquality using (_≟_ ; equality-disjoint)
 
 check1 : (m n : ℕ) → Equal? m n
 check1 = _≟_

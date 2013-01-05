@@ -1,6 +1,6 @@
 module NatEquality where
 
-open import Definitons
+open import Definitions
 
 _≟_ : (m n : ℕ) → Equal? m n
 _≟_ = {!!}
