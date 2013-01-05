@@ -19,6 +19,24 @@ problems = "problems"
 solutions :: FilePath
 solutions = "solutions"
 
+agdaExt :: FilePath -> FilePath
+agdaExt p = p `addExtension` "agda"
+
+verifier :: FilePath
+verifier = agdaExt "Verifier"
+
+definitions :: FilePath
+definitions = agdaExt "Definitions"
+
+description :: FilePath
+description = "README.md"
+
+problemDir :: String -> FilePath
+problemDir p = problems </> p
+
+solutionsDir :: String -> FilePath
+solutionsDir p = solutions </> p
+
 getProblemList :: IO [FilePath]
 getProblemList = filter (('.' /=) . head) `fmap` getDirectoryContents problems
 
@@ -29,29 +47,26 @@ assertProblemExists :: String -> IO ()
 assertProblemExists p = doesProblemExist p >>= flip unless
     (error "Problem does not exist!")
 
-problemDir :: String -> FilePath
-problemDir p = problems </> p
+maybeReadFile :: FilePath -> IO (Maybe Text)
+maybeReadFile file = doesFileExist file >>= \ok -> if ok
+    then Just `fmap` T.readFile file
+    else return Nothing
 
-solutionsDir :: String -> FilePath
-solutionsDir p = solutions </> p
-
-agdaExt :: FilePath -> FilePath
-agdaExt p = p `addExtension` "agda"
+getMaybeDefinitions,getMaybeDescription :: String -> IO (Maybe Text)
+[getMaybeDefinitions,getMaybeDescription] = map
+    (\file p -> maybeReadFile (problemDir p </> file))
+    [ definitions , description ]
 
 getProblem :: String -> IO Value
 getProblem p = do
     assertProblemExists p
     problem <- T.readFile (problemDir p </> agdaExt p)
-    definitions_list <- do
-        let defns_file = problemDir p </> agdaExt "Definitions"
-        ok <- doesFileExist defns_file
-        sequence [ T.readFile defns_file | ok ]
+    m_defns <- getMaybeDefinitions p
+    m_desc <- getMaybeDescription p
     return $ object $
         [ "problem" .= toJSON problem ] ++
-        [ "definitions" .= toJSON definitions | definitions <- definitions_list ]
-
-verifier :: FilePath
-verifier = "Verifier.agda"
+        [ "description" .= toJSON desc | Just desc <- [m_desc] ] ++
+        [ "definitions" .= toJSON defns | Just defns <- [m_defns] ]
 
 solveProblem :: String -> Text -> IO Value
 solveProblem p t = do
@@ -64,13 +79,15 @@ solveProblem p t = do
         d_verifier = d_hash </> verifier
 
     createDirectoryIfMissing True d_hash
+
     T.writeFile (d_hash </> agdaExt p) t
 
     copyFile (d </> verifier) d_verifier
 
-    let defns_file = d </> agdaExt "Definitions"
-    defns_exists <- doesFileExist defns_file
-    when defns_exists $ copyFile defns_file (d_hash </> agdaExt "Definitions")
+    m_defns <- getMaybeDefinitions p
+    case m_defns of
+        Just defns -> T.writeFile (d_hash </> definitions) defns
+        Nothing -> return ()
 
     (exc, out, err) <-
         readProcessWithExitCode

@@ -8,7 +8,10 @@ angular.module('agder', [])
         converter = new Showdown.converter()
         link = (scope, element, attrs, model) ->
             render = () ->
-                htmlText = converter.makeHtml model.$modelValue
+                if model.$modelValue
+                    htmlText = converter.makeHtml model.$modelValue
+                else
+                    htmlText = ""
                 element.html(htmlText)
 
             scope.$watch attrs['ngModel'], render
@@ -56,9 +59,10 @@ angular.module('agder', [])
             if $scope.show and not $scope.problem
                 $http.get(make_url "/problem/#{$id}")
                     .error(console.log)
-                    .success (res) ->
-                        $scope.problem = res.problem
-                        $scope.definitions = res.definitions or ""
+                    .success (res) -> angular.extend $scope,
+                        problem: res.problem
+                        definitions: res.definitions or ""
+                        description: res.description or ""
 
         # Solution attempt
         $scope.submit = () ->

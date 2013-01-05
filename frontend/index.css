@@ -6,9 +6,8 @@ h1 {
   margin: 0px;
   text-align: center; }
 
-p {
-  margin-left: 10px;
-  margin-right: 10px; }
+p.header {
+  text-align: center; }
 
 h2 {
   font-family: "Rufina", sans-serif;

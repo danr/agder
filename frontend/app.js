@@ -13,7 +13,11 @@
       var render;
       render = function() {
         var htmlText;
-        htmlText = converter.makeHtml(model.$modelValue);
+        if (model.$modelValue) {
+          htmlText = converter.makeHtml(model.$modelValue);
+        } else {
+          htmlText = "";
+        }
         return element.html(htmlText);
       };
       scope.$watch(attrs['ngModel'], render);
@@ -54,8 +58,11 @@
     $scope.updateShow = function() {
       if ($scope.show && !$scope.problem) {
         return $http.get(make_url("/problem/" + $id)).error(console.log).success(function(res) {
-          $scope.problem = res.problem;
-          return $scope.definitions = res.definitions || "";
+          return angular.extend($scope, {
+            problem: res.problem,
+            definitions: res.definitions || "",
+            description: res.description || ""
+          });
         });
       }
     };
