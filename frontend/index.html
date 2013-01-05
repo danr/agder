@@ -1,8 +1,9 @@
 <!doctype html>
-<html ng-app>
+<html ng-app="agder">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <script src="lib/angular.min.js" type="text/javascript"></script>
+    <script src="lib/showdown.min.js" type="text/javascript"></script>
     <script src="app.js" type="text/javascript"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Domine:400,700|Rufina|Sacramento|Source+Code+Pro' rel='stylesheet' type='text/css'>
@@ -22,6 +23,7 @@
               <span ng-show="solved">&#10003;</span>
             </h2>
             <div class="problem" ng-show="show">
+              <markdown ng-model="description"></markdown>
               <pre class="problem-definitions" ng-show="definitions">{{ definitions }}</pre>
               <textarea class="problem-input" rows="8" ng-model="problem"></textarea>
               <button ng-click="submit()">Submit solution</button>

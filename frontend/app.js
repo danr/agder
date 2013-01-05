@@ -6,47 +6,39 @@
     return ("http://" + window.location.host) + s;
   };
 
-  window.ProblemsCtrl = function($scope, $http) {
-    var promise;
+  angular.module('agder', []).directive('markdown', function() {
+    var converter, link;
+    converter = new Showdown.converter();
+    link = function(scope, element, attrs, model) {
+      var render;
+      render = function() {
+        var htmlText;
+        htmlText = converter.makeHtml(model.$modelValue);
+        return element.html(htmlText);
+      };
+      scope.$watch(attrs['ngModel'], render);
+      return render();
+    };
+    return {
+      restrict: 'E',
+      require: 'ngModel',
+      link: link
+    };
+  }).controller('ProblemsCtrl', function($scope, $http) {
     $scope.problems = [];
-    promise = $http({
-      method: "GET",
-      url: make_url("/problems")
-    });
-    promise.success(function(res) {
+    return $http.get(make_url("/problems")).success(function(res) {
       return $scope.problems = res;
     });
-    return promise.error(function(res) {
-      return console.log("Error: ", res);
-    });
-  };
-
-  window.ProblemCtrl = function($scope, $http, $location) {
+  }).controller('ProblemCtrl', function($scope, $http, $location) {
     var $id;
     $id = $scope.id;
-    $scope.problem = "";
-    $scope.definitions = "";
-    $scope.solved = false;
-    $scope.toggleShow = function() {
-      $scope.show = !$scope.show;
-      return $scope.updateShow();
-    };
-    $scope.updateShow = function() {
-      var promise;
-      if ($scope.show && !$scope.problem) {
-        promise = $http({
-          method: "GET",
-          url: make_url("/problem/" + $id)
-        });
-        promise.success(function(res) {
-          $scope.problem = res.problem;
-          return $scope.definitions = res.definitions || "";
-        });
-        return promise.error(function(res) {
-          return console.log("Error: ", res);
-        });
-      }
-    };
+    angular.extend($scope, {
+      problem: "",
+      definitions: "",
+      description: "",
+      result: "",
+      solved: false
+    });
     $scope.loc = $location;
     $scope.$watch('loc.search()', function() {
       $scope.show = $location.search()[$id] != null;
@@ -55,16 +47,21 @@
     $scope.$watch('show', function() {
       return $location.search($id, $scope.show || null);
     });
-    $scope.result = "";
+    $scope.toggleShow = function() {
+      $scope.show = !$scope.show;
+      return $scope.updateShow();
+    };
+    $scope.updateShow = function() {
+      if ($scope.show && !$scope.problem) {
+        return $http.get(make_url("/problem/" + $id)).success(function(res) {
+          $scope.problem = res.problem;
+          return $scope.definitions = res.definitions || "";
+        });
+      }
+    };
     return $scope.submit = function() {
-      var submit_promise;
       $scope.result = "Submitted!";
-      submit_promise = $http({
-        method: "POST",
-        url: make_url("/solve/" + $id),
-        data: $scope.problem
-      });
-      submit_promise.success(function(res) {
+      return $http.post(make_url("/solve/" + $id), $scope.problem).success(function(res) {
         $scope.result = res.stdout.replace(RegExp("/home/dan/code/agder/solutions/" + $id + "/[^/]*/([^\\.]*).agda", "g"), function(filename, short) {
           return short + ".agda";
         });
@@ -72,10 +69,7 @@
           return $scope.solved = true;
         }
       });
-      return submit_promise.error(function(res) {
-        return $scope.result = res;
-      });
     };
-  };
+  });
 
 }).call(this);
