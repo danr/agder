@@ -70,7 +70,7 @@ solveProblem p t = do
 
     let defns_file = d </> agdaExt "Definitions"
     defns_exists <- doesFileExist defns_file
-    when defns_exists $ copyFile defns_file (d_hash </> agdaExt "Defintions")
+    when defns_exists $ copyFile defns_file (d_hash </> agdaExt "Definitions")
 
     (exc, out, err) <-
         readProcessWithExitCode
