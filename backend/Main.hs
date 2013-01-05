@@ -18,7 +18,7 @@ main = scotty 3000 $ do
     middleware $ staticPolicy $
         mconcat [ addBase "frontend"
                 , noDots
-                , foldr1 (<|>) (map hasSuffix ["html", "js", "css", "jpg"])
+                , foldr1 (<|>) (map hasSuffix ["html", "js", "css", "jpg", "txt"])
                 ]
         <|> only (zip ["","/"] (repeat "frontend/index.html"))
 
