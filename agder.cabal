@@ -15,6 +15,7 @@ executable agder
   hs-source-dirs:    backend
   build-depends:
         base ==4.6.*
+      , containers
       , unordered-containers
       , transformers
       , filepath
