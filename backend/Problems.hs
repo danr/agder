@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, RecordWildCards #-}
 module Problems where
 
 import Control.Monad
@@ -12,6 +12,8 @@ import System.Directory
 import System.Exit
 import System.FilePath
 import System.Process
+
+import ProcessQueue
 
 problems :: FilePath
 problems = "problems"
@@ -68,8 +70,14 @@ getProblem p = do
         [ "description" .= toJSON desc | Just desc <- [m_desc] ] ++
         [ "definitions" .= toJSON defns | Just defns <- [m_defns] ]
 
-solveProblem :: String -> Text -> IO Value
-solveProblem p t = do
+data Attempt = Attempt
+    { attempt_hash :: String
+    , attempt_problem :: String
+    }
+  deriving (Eq,Show)
+
+solveProblem :: ProcessQueue Attempt -> String -> Text -> IO Value
+solveProblem pq p t = do
     assertProblemExists p
 
     let bs         = T.encodeUtf8 t
@@ -89,15 +97,23 @@ solveProblem p t = do
         Just defns -> T.writeFile (d_hash </> definitions) defns
         Nothing -> return ()
 
-    (exc, out, err) <-
-        readProcessWithExitCode
-            "agda" ["--safe", "-i" ++ d_hash, d_verifier] ""
-    let exit_value = case exc of
+    let attempt = Attempt
+            { attempt_hash = hash
+            , attempt_problem = p
+            }
+
+    enqueue pq attempt "agda" ["--safe", "-i" ++ d_hash, d_verifier] ""
+
+    Result{..} <- getResultWithTag pq attempt
+
+    let exit_value = case res_exit_code of
             ExitSuccess -> 0
             ExitFailure i -> toInteger i
+
     return $ object
         [ "exitcode" .= toJSON exit_value
-        , "stdout" .= toJSON out
-        , "stderr" .= toJSON err
+        , "stdout" .= toJSON res_stdout
+        , "stderr" .= toJSON res_stderr
+        , "time" .= toJSON res_time
         ]
 

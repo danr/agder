@@ -15,12 +15,17 @@ executable agder
   hs-source-dirs:    backend
   build-depends:
         base ==4.6.*
+      , unordered-containers
       , transformers
       , filepath
       , directory
+      , stm
       , process
+      , MonadRandom
       , timeit
       , text
+      , word8
+      , bytestring
       , aeson
       , SHA
       , scotty >= 0.4.6

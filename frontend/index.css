@@ -48,13 +48,19 @@ body, button, pre.problem-result {
   font-family: "Domine", serif;
   font-size: 14px; }
 
+div.login {
+  margin-left: 20px;
+  margin-right: 20px; }
+
+button.problem-submit {
+  float: right; }
+
 button {
   border-radius: 6px;
   background: #aacc44;
   border: 1px solid #83c41a;
   display: inline-block;
   margin-top: 2px;
-  float: right;
   padding: 3px 16px; }
   button:hover {
     background-color: #99cc33; }
