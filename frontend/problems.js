@@ -6,7 +6,7 @@
     return $http.get(make_url("/problems")).error(console.log).success(function(res) {
       return $scope.problems = res;
     });
-  }).controller('ProblemCtrl', function($scope, $http, $location, credentials, make_url) {
+  }).controller('ProblemCtrl', function($scope, $http, $location, $rootScope, make_url) {
     var $id;
     $id = $scope.id;
     angular.extend($scope, {
@@ -39,6 +39,12 @@
         });
       }
     };
+    $scope.cred = function() {
+      return $rootScope.credentials;
+    };
+    $scope.$watch("cred()", function(u) {
+      return console.log("" + $id + " knows credentials has changed. Status is " + $rootScope.status);
+    });
     return $scope.submit = function() {
       $scope.result = "Submitted!";
       return $http.post(make_url("/solve/" + $id), {

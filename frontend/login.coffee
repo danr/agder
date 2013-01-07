@@ -1,14 +1,12 @@
-agder_module.controller 'LoginCtrl', ($scope,credentials) ->
+agder_module.controller 'LoginCtrl', ($scope,$rootScope,credentials) ->
 
     $scope.username = ""
     $scope.password = ""
-    $scope.status = "NotLoggedIn"
 
-    $scope.logged_in = () -> $scope.status == "CredentialsOK"
+    $scope.logged_in = () -> $rootScope.status == "CredentialsOK"
 
     $scope.execute = (fn) -> () ->
-        cb = -> console.log $scope.status = credentials.status()
-        fn cb, $scope.username, $scope.password
+        fn $scope.username, $scope.password
 
     $scope.register = $scope.execute(credentials.register)
     $scope.login = $scope.execute(credentials.login)

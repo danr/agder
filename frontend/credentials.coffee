@@ -1,74 +1,51 @@
-agder_module.factory 'credentials', ($http, make_url) ->
+agder_module.factory 'credentials', ($http, make_url, $rootScope) ->
 
-    hash = () -> CryptoJS.SHA256(salt + password).toString(CryptoJS.enc.Hex)
+    hash = (salt, password) -> CryptoJS.SHA256(salt + password).toString(CryptoJS.enc.Hex)
 
-    update_credentials = () ->
-        if status == "CredentialsOK"
-            Credentials:
-                cred_user: username
-                cred_hash: hash()
-        else
-            Anonymous: []
+    update_credentials = (status, username, h) ->
+        $rootScope.status = status
+        $rootScope.credentials = if $rootScope.status == "CredentialsOK"
+                Credentials:
+                    cred_user: username
+                    cred_hash: h
+            else
+                Anonymous: []
 
-    username = ""
-    password = ""
-    salt = ""
-    status = "NotLoggedIn"
-    credentials = update_credentials()
+    logout = () -> update_credentials "NotLoggedIn"
 
-    logout = (cb) ->
-        username = ""
-        password = ""
-        salt = ""
-        status = "NotLoggedIn"
-        credentials = update_credentials()
-        cb()
-
-    logout ->
+    logout()
 
     parse_status = (res) ->
         for key of res
             return key
         return "NotLoggedIn"
 
-    get_salt = (cont) ->
+    get_salt = (username, cont) ->
         $http.post(make_url("/salt"), d: username)
             .error(console.log)
-            .success (res) ->
-                salt = res
-                status = "SaltReceived"
-                cont()
+            .success cont
 
-    register = (cb, _username, _password) ->
-        username = _username
-        password = _password
-        get_salt () ->
+    register = (username, password) ->
+        get_salt username, (salt) ->
             $http.post(make_url("/register"),
                 Credentials:
                     cred_user: username
-                    cred_hash: hash()
+                    cred_hash: hash(salt, password)
             ).success (res) ->
-                status = parse_status res
-                cb()
-                if status == "SuccessfulCreation"
-                    login(cb, _username, _password)
+                $rootScope.status = parse_status res
+                if $rootScope.status == "SuccessfulCreation"
+                    login username, password
 
-    login = (cb, _username, _password) ->
-        username = _username
-        password = _password
-        get_salt () ->
+    login = (username, password) ->
+        get_salt username, (salt) ->
+            h = hash(salt, password)
             $http.post(make_url("/login"),
                 Credentials:
                     cred_user: username
-                    cred_hash: hash()
+                    cred_hash: h
             ).success (res) ->
-                status = parse_status res
-                update_credentials()
-                cb()
+                update_credentials (parse_status res), username, h
 
-    get: () -> credentials
-    parse_status: parse_status
-    status: () -> status
     register: register
     login: login
     logout: logout

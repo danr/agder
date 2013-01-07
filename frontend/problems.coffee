@@ -6,7 +6,7 @@ agder_module.controller('ProblemsCtrl', ($scope,$http,make_url) ->
             .error(console.log)
             .success (res) -> $scope.problems = res
 
-    ).controller 'ProblemCtrl', ($scope,$http,$location,credentials,make_url) ->
+    ).controller 'ProblemCtrl', ($scope,$http,$location,$rootScope,make_url) ->
         # The identifier of this problem
         $id = $scope.id
 
@@ -42,6 +42,11 @@ agder_module.controller('ProblemsCtrl', ($scope,$http,make_url) ->
                         problem: res.problem
                         definitions: res.definitions or ""
                         description: res.description or ""
+
+        $scope.cred = () -> $rootScope.credentials
+
+        $scope.$watch "cred()", (u) ->
+            console.log "#{$id} knows credentials has changed. Status is #{$rootScope.status}"
 
         # Solution attempt
         $scope.submit = () ->
