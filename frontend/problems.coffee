@@ -6,7 +6,7 @@ agder_module.controller('ProblemsCtrl', ($scope,$http,make_url) ->
             .error(console.log)
             .success (res) -> $scope.problems = res
 
-    ).controller 'ProblemCtrl', ($scope,$http,$location,$rootScope,make_url) ->
+    ).controller 'ProblemCtrl', ($scope,$http,$location,$rootScope,make_url,credentials) ->
         # The identifier of this problem
         $id = $scope.id
 
@@ -52,7 +52,7 @@ agder_module.controller('ProblemsCtrl', ($scope,$http,make_url) ->
         $scope.submit = () ->
             $scope.result = "Submitted!"
             $http.post(make_url("/solve/#{$id}"),
-                credentials: credentials.get()
+                credentials: $rootScope.credentials
                 solution: $scope.problem
             ).error(console.log).success (res) ->
 

@@ -6,7 +6,7 @@
     return $http.get(make_url("/problems")).error(console.log).success(function(res) {
       return $scope.problems = res;
     });
-  }).controller('ProblemCtrl', function($scope, $http, $location, $rootScope, make_url) {
+  }).controller('ProblemCtrl', function($scope, $http, $location, $rootScope, make_url, credentials) {
     var $id;
     $id = $scope.id;
     angular.extend($scope, {
@@ -48,7 +48,7 @@
     return $scope.submit = function() {
       $scope.result = "Submitted!";
       return $http.post(make_url("/solve/" + $id), {
-        credentials: credentials.get(),
+        credentials: $rootScope.credentials,
         solution: $scope.problem
       }).error(console.log).success(function(res) {
         var status;

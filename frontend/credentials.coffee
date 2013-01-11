@@ -49,5 +49,6 @@ agder_module.factory 'credentials', ($http, make_url, $rootScope) ->
     register: register
     login: login
     logout: logout
+    parse_status: parse_status
 
 

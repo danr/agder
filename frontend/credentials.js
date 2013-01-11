@@ -65,7 +65,8 @@
     return {
       register: register,
       login: login,
-      logout: logout
+      logout: logout,
+      parse_status: parse_status
     };
   });
 
